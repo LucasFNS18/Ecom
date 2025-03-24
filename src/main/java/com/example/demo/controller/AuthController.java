@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
     @GetMapping("/test")
 public ResponseEntity<String> test() {
     return ResponseEntity.ok("Rota liberada!");
 }
+
 
     @Autowired
     private AuthService authService;
