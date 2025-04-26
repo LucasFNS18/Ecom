@@ -1,0 +1,11 @@
+body{
+    background-image: url('/Frontend/img/cidade-de-sp-1\ 3.png');
+    background-repeat: no-repeat;
+}
+.register-image {
+    background-image: url('/Frontend/img/cidade-de-sp-1\ 3.png'); /* Substitua pelo caminho da sua imagem */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
