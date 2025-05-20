@@ -27,8 +27,9 @@ public class SecurityConfig {
             .cors(cors -> {}) // ⚠ Ativa o suporte ao CorsConfig.java
             .headers(headers -> headers.frameOptions().disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**", "/auth/**", "/api/anuncios/**").permitAll() // 🔓 Libera o endpoint da API!
-                .anyRequest().authenticated()
+                .requestMatchers("/h2-console/**", "/auth/**").permitAll() // 🔓 Somente login, registro e H2 liberados
+                .requestMatchers("/api/anuncios/**").authenticated()       // 🔐 Agora exige token!
+            
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);

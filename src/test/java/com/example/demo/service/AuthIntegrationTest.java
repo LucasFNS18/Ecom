@@ -1,4 +1,4 @@
-package com.example.demo.service.Integration;
+package com.example.demo.service;
 
 import com.example.demo.dto.AuthDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -147,8 +147,40 @@ public class AuthIntegrationTest {
             .andExpect(status().isUnauthorized());
     }
 
- 
+   //  Acesso à rota protegida SEM token
+   @Test
+   void naoDeveAcessarRotaProtegidaSemToken() throws Exception {
+       mockMvc.perform(get("/api/anuncios"))
+               .andExpect(status().isForbidden()); // ou isUnauthorized(), depende da config
+   }
+   
+   //  Acesso com token inválido ou manipulado
+   @Test
+   void naoDeveAcessarRotaComTokenInvalido() throws Exception {
+       String tokenFalso = "Bearer invalido.123.jwt";
+   
+       mockMvc.perform(get("/api/anuncios")
+               .header("Authorization", tokenFalso))
+               .andExpect(status().isForbidden()); // ou Unauthorized, depende da config
+   }
 
-    
+
+   // 1. Acesso com token inválido → deve retornar 403
+ 
+   @Test
+   void naoDeveAcessarComTokenInvalido() throws Exception {
+       String tokenFalso = "Bearer token.invalido.abc123";
+   
+       mockMvc.perform(get("/api/anuncios")
+               .header("Authorization", tokenFalso))
+               .andExpect(status().isForbidden()); // ou isUnauthorized() dependendo da config
+   }
+   
+   //  Acesso liberado para rota /auth/test sem autenticação
+   @Test
+    void devePermitirAcessoNaRotaLiberadaSemAutenticacao() throws Exception {
+    mockMvc.perform(get("/auth/test"))
+            .andExpect(status().isOk());
+}
 
 }
