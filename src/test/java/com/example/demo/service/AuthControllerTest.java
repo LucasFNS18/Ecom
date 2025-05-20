@@ -16,6 +16,8 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+
+
 public class AuthControllerTest {
 
     // Aqui injeto o controller que quero testar, com os mocks injetados automaticamente
