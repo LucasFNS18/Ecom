@@ -12,38 +12,55 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest // 🧪 Carrega o contexto completo da aplicação Spring
-@AutoConfigureMockMvc // 🧪 Habilita o uso do MockMvc para simular requisições HTTP
+import io.qameta.allure.*;
+import static io.qameta.allure.Allure.step;
+import org.junit.jupiter.api.DisplayName;
+
+@Epic("Segurança")
+@Feature("Configuração de Segurança com Spring Security")
+@SpringBootTest
+@AutoConfigureMockMvc
 public class SecurityConfigTest {
 
-    // Injetando o PasswordEncoder para testar se ele foi configurado corretamente
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Injetando o MockMvc para simular requisições às rotas HTTP da aplicação
     @Autowired
     private MockMvc mockMvc;
 
     @Test
+    @Story("Verifica se o PasswordEncoder foi carregado corretamente")
+    @Severity(SeverityLevel.CRITICAL)
+    @DisplayName("PasswordEncoder deve estar disponível e funcionando")
     void testPasswordEncoderIsLoaded() {
-        // 🧪 Verifica se o PasswordEncoder foi corretamente registrado no contexto do Spring
-        assertThat(passwordEncoder).isNotNull(); // O bean deve existir
-        assertThat(passwordEncoder.encode("123456")).isNotBlank(); // Deve gerar um hash não vazio
+        step("Verifica se o PasswordEncoder foi injetado pelo Spring", () -> {
+            assertThat(passwordEncoder).isNotNull();
+        });
+
+        step("Verifica se o PasswordEncoder gera hash corretamente", () -> {
+            assertThat(passwordEncoder.encode("123456")).isNotBlank();
+        });
     }
 
     @Test
+    @Story("Verifica acesso à rota pública liberada")
+    @Severity(SeverityLevel.NORMAL)
+    @DisplayName("Deve permitir acesso à rota pública /auth/test")
     void testPublicEndpointsAreAccessible() throws Exception {
-        // 🧪 Testa se a rota pública está acessível sem autenticação
-        // Essa rota deve estar liberada no SecurityConfig, como "/auth/test"
-        mockMvc.perform(get("/auth/test"))
-                .andExpect(status().isOk()); // Esperamos status 200 OK
+        step("Faz GET para /auth/test e espera status 200 OK", () -> {
+            mockMvc.perform(get("/auth/test"))
+                    .andExpect(status().isOk());
+        });
     }
 
     @Test
+    @Story("Verifica bloqueio de rota sem autenticação")
+    @Severity(SeverityLevel.NORMAL)
+    @DisplayName("Deve bloquear acesso à rota protegida sem autenticação")
     void testProtectedEndpointRequiresAuthentication() throws Exception {
-        // 🧪 Testa se a rota protegida está realmente exigindo autenticação
-        // "/rota-protegida" deve estar bloqueada para usuários não autenticados
-        mockMvc.perform(get("/rota-protegida"))
-                .andExpect(status().isForbidden()); // Esperamos 403 Forbidden se não houver token
+        step("Faz GET para /rota-protegida e espera status 403 Forbidden", () -> {
+            mockMvc.perform(get("/rota-protegida"))
+                    .andExpect(status().isForbidden());
+        });
     }
 }

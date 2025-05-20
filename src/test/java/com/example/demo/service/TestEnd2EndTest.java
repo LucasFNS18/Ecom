@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AnuncioIntegrationTest {
+public class TestEnd2EndTest {
 
     @Autowired
     private MockMvc mockMvc;
