@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--.\mvnw.cmd spring-boot:run-->
-<!--./mvnw test
--->
-<!--http://localhost:8080/h2-console-->
+<!-- .\mvnw.cmd spring-boot:run -->
+<!-- ./mvnw test -->
+<!-- http://localhost:8080/h2-console -->
+<!-- ./mvnw clean test -->
+<!-- ./mvnw -Dtest=AuthControllerTest test -->
+<!--./mvnw clean test jacoco:report-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -137,6 +140,17 @@
 				</annotationProcessorPaths>
 			</configuration>
 		</plugin>
+
+		<!-- Configuração do Surefire para exibir o tempo de execução dos testes -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version> <!-- Use a versão mais recente -->
+            <configuration>
+                <printSummary>true</printSummary> <!-- Exibe o resumo com tempo de execução -->
+                <reportFormat>plain</reportFormat> <!-- Formato mais simples -->
+            </configuration>
+        </plugin>
 
 		<plugin>
 			<groupId>org.springframework.boot</groupId>

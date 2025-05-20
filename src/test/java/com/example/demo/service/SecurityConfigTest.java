@@ -12,33 +12,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest // 🧪 Carrega o contexto completo da aplicação Spring
+@AutoConfigureMockMvc // 🧪 Habilita o uso do MockMvc para simular requisições HTTP
 public class SecurityConfigTest {
 
+    // Injetando o PasswordEncoder para testar se ele foi configurado corretamente
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // Injetando o MockMvc para simular requisições às rotas HTTP da aplicação
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     void testPasswordEncoderIsLoaded() {
-        assertThat(passwordEncoder).isNotNull();
-        assertThat(passwordEncoder.encode("123456")).isNotBlank();
+        // 🧪 Verifica se o PasswordEncoder foi corretamente registrado no contexto do Spring
+        assertThat(passwordEncoder).isNotNull(); // O bean deve existir
+        assertThat(passwordEncoder.encode("123456")).isNotBlank(); // Deve gerar um hash não vazio
     }
 
     @Test
     void testPublicEndpointsAreAccessible() throws Exception {
-        // Usa uma rota que EXISTE e está liberada em SecurityConfig
+        // 🧪 Testa se a rota pública está acessível sem autenticação
+        // Essa rota deve estar liberada no SecurityConfig, como "/auth/test"
         mockMvc.perform(get("/auth/test"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()); // Esperamos status 200 OK
     }
 
     @Test
     void testProtectedEndpointRequiresAuthentication() throws Exception {
-        // Usa uma rota que exige autenticação
+        // 🧪 Testa se a rota protegida está realmente exigindo autenticação
+        // "/rota-protegida" deve estar bloqueada para usuários não autenticados
         mockMvc.perform(get("/rota-protegida"))
-                .andExpect(status().isForbidden()); // Foi 403 na execução real
+                .andExpect(status().isForbidden()); // Esperamos 403 Forbidden se não houver token
     }
 }
